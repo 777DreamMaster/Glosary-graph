@@ -11,7 +11,7 @@ app.use(express.json());
 
 const readGlossary = () => {
     if (!fs.existsSync(glossaryFilePath)) {
-        fs.writeFileSync(glossaryFilePath, JSON.stringify([]));
+        fs.writeFileSync(glossaryFilePath, JSON.stringify({ nodes: [], edges: [] }));
     }
     return JSON.parse(fs.readFileSync(glossaryFilePath, "utf-8"));
 };
@@ -20,23 +20,19 @@ const writeGlossary = (data) => {
     fs.writeFileSync(glossaryFilePath, JSON.stringify(data, null, 2));
 };
 
+// Получение всех терминов
 app.get("/terms", (req, res) => {
     const glossary = readGlossary();
-    res.json(glossary);
+    res.json(glossary.nodes);
 });
 
-app.get("/terms/:term", (req, res) => {
+// Получение всех связей
+app.get("/edges", (req, res) => {
     const glossary = readGlossary();
-    const term = glossary.find(
-        (item) => item.term.toLowerCase() === req.params.term.toLowerCase()
-    );
-    if (term) {
-        res.json(term);
-    } else {
-        res.status(404).json({ message: "Term not found" });
-    }
+    res.json(glossary.edges);
 });
 
+// Добавление нового термина
 app.post("/terms", (req, res) => {
     const glossary = readGlossary();
     const { term, definition, graphData } = req.body;
@@ -47,51 +43,35 @@ app.post("/terms", (req, res) => {
         });
     }
 
-    const exists = glossary.some(
-        (item) => item.term.toLowerCase() === term.toLowerCase()
-    );
+    const newId = glossary.nodes.length > 0 ? glossary.nodes[glossary.nodes.length - 1].id + 1 : 1;
+    const newTerm = { id: newId, term, definition, graphData };
 
-    if (exists) {
-        return res.status(409).json({ message: "Term already exists." });
-    }
-
-    glossary.push({ term, definition, graphData });
+    glossary.nodes.push(newTerm);
     writeGlossary(glossary);
-    res.status(201).json({ message: "Term added successfully." });
+    res.status(201).json({ message: "Term added successfully.", term: newTerm });
 });
 
-app.put("/terms/:term", (req, res) => {
+// Добавление новой связи
+app.post("/edges", (req, res) => {
     const glossary = readGlossary();
-    const { definition, graphData } = req.body;
-    const termIndex = glossary.findIndex(
-        (item) => item.term.toLowerCase() === req.params.term.toLowerCase()
-    );
+    const { term1, term2, relation } = req.body;
 
-    if (termIndex === -1) {
-        return res.status(404).json({ message: "Term not found." });
+    if (!term1 || !term2 || !relation) {
+        return res.status(400).json({
+            message: "Fields 'term1', 'term2', and 'relation' are required."
+        });
     }
 
-    if (definition) glossary[termIndex].definition = definition;
-    if (graphData) glossary[termIndex].graphData = graphData;
+    if (!glossary.nodes.find((node) => node.id === term1) || !glossary.nodes.find((node) => node.id === term2)) {
+        return res.status(404).json({ message: "One or both terms not found." });
+    }
 
+    glossary.edges.push({ term1, term2, relation });
     writeGlossary(glossary);
-    res.json({ message: "Term updated successfully." });
+    res.status(201).json({ message: "Edge added successfully.", edge: { term1, term2, relation } });
 });
 
-app.delete("/terms/:term", (req, res) => {
-    const glossary = readGlossary();
-    const updatedGlossary = glossary.filter(
-        (item) => item.term.toLowerCase() !== req.params.term.toLowerCase()
-    );
-
-    if (updatedGlossary.length === glossary.length) {
-        return res.status(404).json({ message: "Term not found." });
-    }
-
-    writeGlossary(updatedGlossary);
-    res.json({ message: "Term deleted successfully." });
-});
-
+// Запуск сервера
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
