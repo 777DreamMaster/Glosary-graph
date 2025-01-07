@@ -4,7 +4,7 @@ import api from "../api";
 function AdminPage() {
     const [terms, setTerms] = useState([]);
     const [edges, setEdges] = useState([]);
-    const [newTerm, setNewTerm] = useState({ term: '', definition: '', graphData: { coordinates: { x: 0, y: 0 } } });
+    const [newTerm, setNewTerm] = useState({ term: '', definition: '',  x: 0, y: 0 });
     const [newEdge, setNewEdge] = useState({ term1: '', term2: '', relation: '' });
 
     useEffect(() => {
@@ -33,7 +33,7 @@ function AdminPage() {
     const handleAddTerm = async () => {
         try {
             await api.post('/terms', newTerm);
-            setNewTerm({ term: '', definition: '', graphData: { coordinates: { x: 0, y: 0 } } });
+            setNewTerm({ term: '', definition: '',  x: 0, y: 0 });
             await fetchTerms();
         } catch (error) {
             console.error('Error adding term:', error);
@@ -70,22 +70,22 @@ function AdminPage() {
             <input
                 type="number"
                 placeholder="X Coordinate"
-                value={newTerm.graphData.coordinates.x}
+                value={newTerm.x}
                 onChange={(e) =>
                     setNewTerm({
                         ...newTerm,
-                        graphData: { coordinates: { ...newTerm.graphData.coordinates, x: +e.target.value } },
+                        x: +e.target.value,
                     })
                 }
             />
             <input
                 type="number"
                 placeholder="Y Coordinate"
-                value={newTerm.graphData.coordinates.y}
+                value={newTerm.y}
                 onChange={(e) =>
                     setNewTerm({
                         ...newTerm,
-                        graphData: { coordinates: { ...newTerm.graphData.coordinates, y: +e.target.value } },
+                        y: +e.target.value,
                     })
                 }
             />
@@ -126,7 +126,7 @@ function AdminPage() {
             <ul>
                 {terms.map((term) => (
                     <li key={term.id}>
-                        {term.term}: {term.definition} (x: {term.graphData.coordinates.x}, y: {term.graphData.coordinates.y})
+                        {term.term}: {term.definition} (x: {term.x}, y: {term.y})
                     </li>
                 ))}
             </ul>

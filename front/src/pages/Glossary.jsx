@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import api from "../api";
-import "../../public/glossary.css"
+import "./glossary.css"
 
 
 const Glossary = () => {
     const [nodes, setNodes] = useState([]);
-    const [newTerm, setNewTerm] = useState({ term: '', definition: '', graphData: { coordinates: { x: 0, y: 0 } } });
+    const [newTerm, setNewTerm] = useState({ term: '', definition: '', x: 0, y: 0  });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const Glossary = () => {
     const handleAddTerm = async () => {
         try {
             await api.post('/terms', newTerm);
-            setNewTerm({ term: '', definition: '', graphData: { coordinates: { x: 0, y: 0 } } });
+            setNewTerm({ term: '', definition: '', x: 200, y: 200 });
             setIsModalOpen(false);
             fetchNodes().then(() => console.log("Nodes loaded"));
         } catch (error) {
@@ -54,20 +54,24 @@ const Glossary = () => {
                 className="modal"
                 overlayClassName="overlay"
             >
-                <h2>Add New Term</h2>
+                <h2 className="modal-title">Add New Term</h2>
                 <input
                     type="text"
                     placeholder="Term"
                     value={newTerm.term}
                     onChange={(e) => setNewTerm({ ...newTerm, term: e.target.value })}
+                    className="modal-input"
                 />
                 <textarea
                     placeholder="Definition"
                     value={newTerm.definition}
                     onChange={(e) => setNewTerm({ ...newTerm, definition: e.target.value })}
+                    className="modal-textarea"
                 />
-                <button onClick={handleAddTerm}>Add Term</button>
-                <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <div className="modal-buttons">
+                    <button onClick={handleAddTerm} className="modal-button primary">Add Term</button>
+                    <button onClick={() => setIsModalOpen(false)} className="modal-button secondary">Cancel</button>
+                </div>
             </Modal>
         </div>
     );

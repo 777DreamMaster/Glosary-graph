@@ -38,16 +38,16 @@ app.get("/edges", (req, res) => {
 // Добавление нового термина
 app.post("/terms", (req, res) => {
     const glossary = readGlossary();
-    const { term, definition, graphData } = req.body;
+    const { term, definition, x, y } = req.body;
 
-    if (!term || !definition || !graphData) {
+    if (!term || !definition || !x || !y) {
         return res.status(400).json({
-            message: "Fields 'term', 'definition', and 'graphData' are required."
+            message: "Fields 'term', 'definition', and 'x, y' are required."
         });
     }
 
     const newId = glossary.nodes.length > 0 ? glossary.nodes[glossary.nodes.length - 1].id + 1 : 1;
-    const newTerm = { id: newId, term, definition, graphData };
+    const newTerm = { id: newId, term, definition, x, y };
 
     glossary.nodes.push(newTerm);
     writeGlossary(glossary);
