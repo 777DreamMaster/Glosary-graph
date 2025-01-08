@@ -5,7 +5,7 @@ function AdminPage() {
     const [terms, setTerms] = useState([]);
     const [edges, setEdges] = useState([]);
     const [newTerm, setNewTerm] = useState({ term: '', definition: '',  x: 0, y: 0 });
-    const [newEdge, setNewEdge] = useState({ term1: '', term2: '', relation: '' });
+    const [newEdge, setNewEdge] = useState({ term1: 1, term2: 1, relation: '' });
 
     useEffect(() => {
         fetchTerms().then(() => console.log("Terms loaded"));
@@ -43,7 +43,7 @@ function AdminPage() {
     const handleAddEdge = async () => {
         try {
             await api.post('/edges', newEdge);
-            setNewEdge({ term1: '', term2: '', relation: '' });
+            setNewEdge({ term1: 1, term2: 1, relation: '' });
             await fetchEdges();
         } catch (error) {
             console.error('Error adding edge:', error);
@@ -94,7 +94,7 @@ function AdminPage() {
             <h2>Add Edge</h2>
             <select
                 value={newEdge.term1}
-                onChange={(e) => setNewEdge({ ...newEdge, term1: e.target.value })}
+                onChange={(e) => setNewEdge({ ...newEdge, term1: +e.target.value })}
             >
                 <option value="">Select Term 1</option>
                 {terms.map((term) => (
@@ -105,7 +105,7 @@ function AdminPage() {
             </select>
             <select
                 value={newEdge.term2}
-                onChange={(e) => setNewEdge({ ...newEdge, term2: e.target.value })}
+                onChange={(e) => setNewEdge({ ...newEdge, term2: +e.target.value })}
             >
                 <option value="">Select Term 2</option>
                 {terms.map((term) => (

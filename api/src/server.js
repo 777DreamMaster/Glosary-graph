@@ -40,7 +40,7 @@ app.post("/terms", (req, res) => {
     const glossary = readGlossary();
     const { term, definition, x, y } = req.body;
 
-    if (!term || !definition || !x || !y) {
+    if (!term || !definition) {
         return res.status(400).json({
             message: "Fields 'term', 'definition', and 'x, y' are required."
         });
