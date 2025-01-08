@@ -1,7 +1,7 @@
 import {Navigate, Route, Routes} from "react-router-dom";
-import AdminPage from "./pages/AdminPage";
-import Glossary from "./pages/Glossary";
-import SemanticGraph from "./pages/SemanticGraph";
+import AdminPage from "./pages/admin/AdminPage";
+import Glossary from "./pages/glossary/Glossary";
+import SemanticGraph from "./pages/semantic-graph/SemanticGraph";
 
 export const App = () => (
     <Routes>

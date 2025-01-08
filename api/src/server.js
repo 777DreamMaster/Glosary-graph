@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-const glossaryFilePath = path.join(__dirname, "glossary.json");
+const glossaryFilePath = path.join(__dirname, "../data/glossary.json");
 
 app.use(cors());
 

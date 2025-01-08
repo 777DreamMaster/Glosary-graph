@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import api from "../api";
+import api from "../../api";
 import "./glossary.css"
 
 

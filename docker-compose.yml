@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/usr/src/app
+      - ./api/data/glossary.json:/usr/src/app/data/glossary.json
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - VITE_BACKEND_URL=http://localhost:3000
+
+networks:
+  default:
+    driver: bridge
