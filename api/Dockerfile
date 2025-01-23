@@ -1,14 +1,14 @@
 FROM node:slim
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json ./package.json
+COPY package*.json ./
 
 RUN npm install
 
-COPY src ./src
+COPY . .
 
-VOLUME ["/usr/src/app/data"]
+VOLUME ["/app/data"]
 
 EXPOSE 3000
 
