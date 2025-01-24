@@ -70,8 +70,9 @@ const SemanticGraph = () => {
                 },
             },
             edges: {
+                smooth: false,
                 arrows: {
-                    to: {enabled: true, scaleFactor: 1.5}, // Make arrows longer
+                    to: {enabled: true, scaleFactor: 1}, // Make arrows longer
                 },
                 font: {
                     align: 'middle',
@@ -82,7 +83,7 @@ const SemanticGraph = () => {
                 },
             },
             physics: {
-                enabled: true,
+                enabled: false,
             },
             interaction: {
                 dragNodes: true,

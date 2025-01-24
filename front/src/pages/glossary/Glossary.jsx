@@ -44,7 +44,7 @@ const Glossary = () => {
             <h1 className="glossary-title">Glossary</h1>
             <div className="tiles-container">
                 {nodes.map((node) => (
-                    <div key={node.id} className="tile" onClick={() => handleAddTerm(node.url)}>
+                    <div key={node.id} className="tile" onClick={() => handleCardClick(node.url)}>
                         <h2 className="tile-title">{node.term}</h2>
                         <p className="tile-definition">{node.definition}</p>
                     </div>
