@@ -38,7 +38,7 @@ app.get("/edges", (req, res) => {
 // Добавление нового термина
 app.post("/terms", (req, res) => {
     const glossary = readGlossary();
-    const { term, definition, x, y } = req.body;
+    const { term, definition, x, y, url } = req.body;
 
     if (!term || !definition) {
         return res.status(400).json({
@@ -47,7 +47,7 @@ app.post("/terms", (req, res) => {
     }
 
     const newId = glossary.nodes.length > 0 ? glossary.nodes[glossary.nodes.length - 1].id + 1 : 1;
-    const newTerm = { id: newId, term, definition, x, y };
+    const newTerm = { id: newId, term, definition, x, y, url };
 
     glossary.nodes.push(newTerm);
     writeGlossary(glossary);
