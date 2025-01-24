@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    image: 777dreammaster/graph-backend:latest
+    container_name: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./glossary.json:/usr/src/app/data/glossary.json
+    environment:
+      - NODE_ENV=production
+
+  frontend:
+    image: 777dreammaster/graph-frontend:latest
+    container_name: frontend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - VITE_BACKEND_URL=http://localhost:3000
+
+networks:
+  default:
+    driver: bridge
